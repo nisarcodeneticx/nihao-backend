@@ -26,7 +26,7 @@ Maven is included through the wrapper (`mvnw` / `mvnw.cmd`), so a separate Maven
 CREATE DATABASE nihao_urdu CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-2. In `src/main/resources/application.properties`, set the MySQL username, password, and `app.jwt.secret` for your machine. Do not commit real secrets.
+2. Local defaults in `application.properties` use MySQL on `localhost` with user `root`. Override them with environment variables when the database is somewhere else: `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`, and `APP_JWT_SECRET`.
 
 3. For Google sign-in, set the `GOOGLE_WEB_CLIENT_ID` environment variable to the same web OAuth client ID used by the Android app.
 
@@ -47,11 +47,24 @@ The app listens on port **8089** with context path **`/api`**.
 | | |
 |---|---|
 | API base | http://localhost:8089/api |
-| Admin page | http://localhost:8089/api/admin |
+| Admin page | http://localhost:8089/api/index.html |
 | Swagger UI | http://localhost:8089/api/swagger-ui.html |
 | OpenAPI JSON | http://localhost:8089/api/api-docs |
 
-Flyway runs the scripts in `src/main/resources/db/migration` on startup. Hibernate does not alter tables (`spring.jpa.hibernate.ddl-auto=none`).
+Flyway runs the scripts in `src/main/resources/db/migration` on startup. On an empty database it creates the core tables first, then the progress and Google sign-in changes. Hibernate does not alter tables (`spring.jpa.hibernate.ddl-auto=none`).
+
+## Deploy on Vercel
+
+`Dockerfile.vercel` in the project root is the file Vercel builds. MySQL does not run on Vercel, so create an empty hosted database named `nihao_urdu` (Aiven, Railway, or another MySQL host) and set these environment variables on the Vercel project:
+
+| Variable | Purpose |
+|---|---|
+| `SPRING_DATASOURCE_URL` | JDBC URL of the hosted database, with SSL options your host requires |
+| `SPRING_DATASOURCE_USERNAME` | Database user |
+| `SPRING_DATASOURCE_PASSWORD` | Database password |
+| `APP_JWT_SECRET` | Long random string used to sign tokens |
+
+Vercel sets `PORT` itself. The public API is `https://<your-project>.vercel.app/api`.
 
 On first launch the app seeds two users, and if the database has no courses it also seeds a sample **Basic Chinese (HSK 1)** course:
 

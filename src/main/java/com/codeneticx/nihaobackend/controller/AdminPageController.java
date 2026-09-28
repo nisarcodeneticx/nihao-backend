@@ -13,12 +13,12 @@ import java.nio.file.Path;
 @RestController
 public class AdminPageController {
 
-    @GetMapping(value = {"/admin", "/admin.html"}, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = {"/", "/index.html", "/admin"}, produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<Resource> adminPage() {
-        Path rootAdmin = Path.of(System.getProperty("user.dir"), "admin.html");
-        Resource resource = rootAdmin.toFile().exists()
-                ? new FileSystemResource(rootAdmin)
-                : new ClassPathResource("static/admin.html");
+        Path rootPage = Path.of(System.getProperty("user.dir"), "index.html");
+        Resource resource = rootPage.toFile().exists()
+                ? new FileSystemResource(rootPage)
+                : new ClassPathResource("static/index.html");
 
         return ResponseEntity.ok()
                 .contentType(MediaType.TEXT_HTML)

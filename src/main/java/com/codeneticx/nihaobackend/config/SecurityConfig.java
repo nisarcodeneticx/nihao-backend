@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin", "/admin.html", "/static/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/admin", "/static/**").permitAll()
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/v1/api/login", "/v1/api/register", "/v1/api/auth/google").permitAll()
                         .requestMatchers("/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**").permitAll()
