@@ -8,5 +8,6 @@ FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/nihaobackend-1.0.0.jar app.jar
 ENV PORT=80
+ENV SPRING_PROFILES_ACTIVE=vercel
 EXPOSE 80
 ENTRYPOINT ["java", "-jar", "app.jar"]

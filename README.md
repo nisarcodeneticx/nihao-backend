@@ -55,16 +55,11 @@ Flyway runs the scripts in `src/main/resources/db/migration` on startup. On an e
 
 ## Deploy on Vercel
 
-`Dockerfile.vercel` in the project root is the file Vercel builds. MySQL does not run on Vercel, so create an empty hosted database named `nihao_urdu` (Aiven, Railway, or another MySQL host) and set these environment variables on the Vercel project:
+`Dockerfile.vercel` in the project root is the file Vercel builds. It starts the app with the `vercel` profile, which uses a database inside the server. You do not set database credentials.
 
-| Variable | Purpose |
-|---|---|
-| `SPRING_DATASOURCE_URL` | JDBC URL of the hosted database, with SSL options your host requires |
-| `SPRING_DATASOURCE_USERNAME` | Database user |
-| `SPRING_DATASOURCE_PASSWORD` | Database password |
-| `APP_JWT_SECRET` | Long random string used to sign tokens |
+Vercel stops the server after it sits idle, and that database is cleared. The next visit creates the tables again and seeds the admin, student, and sample course. Accounts or content created in the admin page are not kept.
 
-Vercel sets `PORT` itself. The public API is `https://<your-project>.vercel.app/api`.
+Your own computer still uses local MySQL. The public API is `https://<your-project>.vercel.app/api`.
 
 On first launch the app seeds two users, and if the database has no courses it also seeds a sample **Basic Chinese (HSK 1)** course:
 
